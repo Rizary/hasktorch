@@ -17,7 +17,7 @@ let
 
   haskellPackages =
     pkgs.haskell.packages.ghc865.extend (newPkgs: old: {
-      libtorch-ffi = newPkgs.callPackage ./libtorch-ffi.nix {
+      libtorch-ffi = old.callPackage ./libtorch-ffi.nix {
         inherit c10 torch;
       };
     });
