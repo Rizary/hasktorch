@@ -1,5 +1,4 @@
-{ shared ? import ../nix/shared.nix { }
-, pkgs ? import <nixpkgs> {}
+{ pkgs ? import <nixpkgs> {}
 }:
 
 let
@@ -16,10 +15,13 @@ let
   torch = libtorch_src.libtorch_cpu;
 
   haskellPackages =
-    pkgs.haskell.packages.ghc865.extend (newPkgs: old: {
-      libtorch-ffi = old.callPackage ./libtorch-ffi.nix {
+    pkgs.haskell.packages.ghc865.extend (newPkgs: old:
+      let appendConfigureFlag = pkgs.haskell.lib.appendConfigureFlag;
+      in {
+      libtorch-ffi =
+        appendConfigureFlag (old.callCabal2nix "libtorch-ffi" ./libtorch-ffi.nix {
         inherit c10 torch;
-      };
+      }) "--extra-include-dirs=${libtorch_src.libtorch_cpu}/include/torch/csrc/api/include";
     });
 
 in
