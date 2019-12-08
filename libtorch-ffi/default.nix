@@ -1,1 +1,7 @@
-(import ../nix/shared.nix { }).libtorch-ffi_cpu
+let
+  shared = import ../nix/shared.nix { };
+
+in
+ { inherit (shared)
+   libtorch-ffi_cpu;
+ }
